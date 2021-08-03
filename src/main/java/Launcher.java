@@ -1,8 +1,6 @@
-import java.io.Console;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -13,7 +11,6 @@ import org.jsoup.select.Elements;
 import datas.DayData;
 import datas.LieuData;
 import output.ExcelFile;
-import output.GoogleDrivePusher;
 import utils.ColorsEnum;
 import utils.CustomComparator;
 import utils.Utils;
