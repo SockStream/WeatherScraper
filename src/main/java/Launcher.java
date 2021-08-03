@@ -28,6 +28,7 @@ public class Launcher {
 		listeLieux.add(new Coordinate(50.05,3.12)); //Gouzeaucourt
 		listeLieux.add(new Coordinate(50.51,1.99)); //Rimboval
 		listeLieux.add(new Coordinate(50.21,3.09)); //Marquion
+		listeLieux.add(new Coordinate(50.74,2.69)); //Méteren
 		
 		
 		for (Coordinate lieu : listeLieux)
@@ -185,55 +186,41 @@ public class Launcher {
 	}
 
 	private static List<Integer> ScraperNuagesTotaux(Element fc_day) {
-		List<Integer> nuagesHauts = new ArrayList<Integer>();
-		
-		Element fc_detail_row = fc_day.select(".fc_detail_row").get(0);
-		for(Element hour : fc_detail_row.select("li"))
-		{
-			int valeur = Integer.parseInt(hour.text());
-			nuagesHauts.add(valeur);
-		}
-		
-		return nuagesHauts;
+		return ScraperNuages(fc_day,0);
 	}
 
 	private static List<Integer> ScraperNuagesBas(Element fc_day) {
-		List<Integer> nuagesHauts = new ArrayList<Integer>();
-		
-		Element fc_detail_row = fc_day.select(".fc_detail_row").get(1);
-		for(Element hour : fc_detail_row.select("li"))
-		{
-			int valeur = Integer.parseInt(hour.text());
-			nuagesHauts.add(valeur);
-		}
-		
-		return nuagesHauts;
+		return ScraperNuages(fc_day,1);
 	}
 
 	private static List<Integer> ScraperNuagesMoyens(Element fc_day) {
-		List<Integer> nuagesHauts = new ArrayList<Integer>();
-		
-		Element fc_detail_row = fc_day.select(".fc_detail_row").get(2);
-		for(Element hour : fc_detail_row.select("li"))
-		{
-			int valeur = Integer.parseInt(hour.text());
-			nuagesHauts.add(valeur);
-		}
-		
-		return nuagesHauts;
+		return ScraperNuages(fc_day,2);
 	}
 
 	private static List<Integer> ScraperNuagesHauts(Element fc_day) {
-		List<Integer> nuagesHauts = new ArrayList<Integer>();
+		return ScraperNuages(fc_day,3);
+	}
+	
+	private static List<Integer> ScraperNuages(Element fc_day, int index)
+	{
+		List<Integer> nuages = new ArrayList<Integer>();
 		
-		Element fc_detail_row = fc_day.select(".fc_detail_row").get(3);
+		Element fc_detail_row = fc_day.select(".fc_detail_row").get(index);
 		for(Element hour : fc_detail_row.select("li"))
 		{
-			int valeur = Integer.parseInt(hour.text());
-			nuagesHauts.add(valeur);
+			int valeur = -1;
+
+			try
+			{
+				valeur = Integer.parseInt(hour.text());
+			}
+			catch(Exception e)
+			{
+				
+			}
+			nuages.add(valeur);
 		}
-		
-		return nuagesHauts;
+		return nuages;
 	}
 
 	private static String ScraperCoucherLuneJour(Element fc_day) {
