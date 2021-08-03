@@ -258,8 +258,13 @@ public class ExcelFile {
 
 	private void FermerWorkBook(Workbook wb) throws FileNotFoundException, IOException {
 		// Write the output to a file
-	    try (OutputStream fileOut = new FileOutputStream(_Filename + ".xls")) {
+	    try {
+	    	OutputStream fileOut = new FileOutputStream(_Filename + ".xls");
 	        wb.write(fileOut);
+	    }
+	    catch(Exception e)
+	    {
+	    	
 	    }
 	    wb.close();
 	}
