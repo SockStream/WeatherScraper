@@ -1,4 +1,8 @@
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,9 +12,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.google.api.services.drive.Drive;
+
 import datas.DayData;
 import datas.LieuData;
+import input.GoogleDriveInput;
 import output.ExcelFile;
+import output.GoogleDrivePusher;
 import utils.ColorsEnum;
 import utils.CustomComparator;
 import utils.Utils;
@@ -18,19 +26,9 @@ import utils.Utils;
 public class Launcher {
 
 	public static void main(String[] args) throws IOException {
-		List<Coordinate> listeLieux = new ArrayList<Coordinate>();
-		List<LieuData> listeLieuxData = new ArrayList<LieuData>();
-		listeLieux.add(new Coordinate(50.65,3.03)); //lambersart
-		listeLieux.add(new Coordinate(50.42,2.56)); //Hermin
-		listeLieux.add(new Coordinate(49.94,4.64)); //revin
-		listeLieux.add(new Coordinate(50.82,2.58)); //Steenvoorde
-		listeLieux.add(new Coordinate(50.23,3.16)); //Epinoy
-		listeLieux.add(new Coordinate(50.05,3.12)); //Gouzeaucourt
-		listeLieux.add(new Coordinate(50.51,1.99)); //Rimboval
-		listeLieux.add(new Coordinate(50.21,3.09)); //Marquion
-		listeLieux.add(new Coordinate(50.74,2.69)); //Méteren
 		
-		
+		List<Coordinate> listeLieux = getCoordinatesFromConfigFile();
+		List<LieuData> listeLieuxData = new ArrayList<LieuData>();		
 		for (Coordinate lieu : listeLieux)
 		{
 			System.out.println("Traitement du lieu : " + lieu.getLatitude() + "/" + lieu.getLongitude());
@@ -49,9 +47,43 @@ public class Launcher {
 		ExcelFile excelFile = new ExcelFile("Previsions_clearoutside");
 		excelFile.Generate(listeLieuxData);
 		//GoogleDrivePusher.push("Previsions_clearoutside");
+		FileInputStream fis = new FileInputStream("Previsions_clearoutside.xls");
+		GoogleDrivePusher.createGoogleFile("Previsions_ClearOutside", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Previsions_clearoutside.xls",fis);
+		fis.close();
+		File file = new File("Previsions_clearoutside.xls");
+		file.delete();
 		System.out.println("Fin du Traitement");
 	}
 	
+	private static List<Coordinate> getCoordinatesFromConfigFile() throws IOException {
+		List<Coordinate> listeLieux = new ArrayList<Coordinate>();
+		
+		String configFileName = GoogleDriveInput.getConfigFile("Coordinates.txt");
+		
+		List<String> content = Files.readAllLines(Paths.get(configFileName));
+		Files.delete(Paths.get("Coordinates.txt"));
+		
+		for(String line: content)
+		{
+			if (line.contains("#"))
+			{
+				continue;
+			}
+			try
+			{
+				String coord = line.split(" ")[0];
+				double latitude = Double.parseDouble(coord.split(",")[0]);
+				double longitude = Double.parseDouble(coord.split(",")[1]);
+				listeLieux.add(new Coordinate(latitude,longitude));
+			}
+			catch(Exception e)
+			{
+				
+			}
+		}
+		return listeLieux;
+	}
+
 	public static LieuData ScraperDonneesLieu(Coordinate coord) throws IOException
 	{
 		Document doc = Jsoup.connect("http://clearoutside.com/forecast/" + coord.getLatitude() + "/" + coord.getLongitude() + "?view=midnight").get();
