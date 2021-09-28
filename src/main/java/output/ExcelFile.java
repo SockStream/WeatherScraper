@@ -67,6 +67,7 @@ public class ExcelFile {
 			FileInputStream stream = new FileInputStream(iss_IconFile);
 			pictureIndex = wb.addPicture(IOUtils.toByteArray(stream), Workbook.PICTURE_TYPE_PNG);
 			stream.close();
+			Files.delete(Paths.get("iss_icon.png"));
 		}
 		CreerStyles(wb);
 		
