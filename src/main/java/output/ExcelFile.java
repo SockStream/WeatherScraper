@@ -1,26 +1,42 @@
 package output;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Hyperlink;
+import org.apache.poi.common.usermodel.HyperlinkType;
+import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.util.IOUtils;
 
 import datas.DayData;
+import datas.IssDatas;
 import datas.LieuData;
+import input.GoogleDriveInput;
 
 public class ExcelFile {
 	private static String _Filename;
@@ -40,12 +56,23 @@ public class ExcelFile {
 	}
 
 	public void Generate(List<LieuData> listeLieuxData) throws FileNotFoundException, IOException {
+		List<String> lieuxParOrdreAlpha = new ArrayList<String>();
 		Workbook wb = new HSSFWorkbook();
-		
+		CreationHelper factory = wb.getCreationHelper();
+
+		String iss_IconFile = GoogleDriveInput.getFile("iss_icon.png");
+		int pictureIndex = -1;
+		if (iss_IconFile != null)
+		{
+			FileInputStream stream = new FileInputStream(iss_IconFile);
+			pictureIndex = wb.addPicture(IOUtils.toByteArray(stream), Workbook.PICTURE_TYPE_PNG);
+			stream.close();
+		}
 		CreerStyles(wb);
 		
 		for (LieuData data : listeLieuxData)
 		{
+			lieuxParOrdreAlpha.add(data.getNom());
 			Sheet sheet = wb.createSheet(data.getNom().split(",")[0]);
 			InscrireNomLieu(sheet,data);
 			InscrireBortle(sheet,data);
@@ -66,6 +93,8 @@ public class ExcelFile {
 				InscrireMediumClouds(sheet, compteur, day);
 				compteur ++;
 				InscrireHighClouds(sheet, compteur, day);
+				compteur++;
+				InscrirePassagesISS(sheet,factory,pictureIndex, compteur, day);
 				
 				compteur += 2;
 			}
@@ -73,7 +102,40 @@ public class ExcelFile {
 			sheet.setColumnWidth(1, 4000);
 			sheet.autoSizeColumn(0, true);
 		}
+		Collections.sort(lieuxParOrdreAlpha);
+		//CreerPageRaccourcis(wb,lieuxParOrdreAlpha);
 		FermerWorkBook(wb);
+	}
+
+	private void CreerPageRaccourcis(Workbook wb, List<String> lieuxParOrdreAlpha) {
+		CellStyle hlink_style = wb.createCellStyle();
+		Font hlink_font = wb.createFont();
+
+
+		hlink_font.setUnderline(Font.U_SINGLE);
+
+
+		hlink_font.setColor(IndexedColors.BLUE.getIndex());
+
+
+		hlink_style.setFont(hlink_font);
+		
+		Sheet sheet = wb.createSheet("Menu");
+		int i = 0;
+		CreationHelper createHelper = wb.getCreationHelper();
+		for(String lieu : lieuxParOrdreAlpha)
+		{
+			Row row = sheet.createRow(i);
+			Cell cell = row.createCell(0);
+			cell.setCellValue(lieu);
+			HSSFHyperlink hyperlink = (HSSFHyperlink) createHelper.createHyperlink(HyperlinkType.DOCUMENT);
+			hyperlink.setAddress("'"+ lieu.split(",")[0] +"'!A2");
+			cell.setHyperlink(hyperlink);
+			cell.setCellStyle(hlink_style);
+			i++;
+		}
+		wb.setSheetOrder("Menu", 0);
+		wb.setActiveSheet(0);
 	}
 
 	private void CreerStyles(Workbook wb) {
@@ -121,6 +183,51 @@ public class ExcelFile {
 		
 		rightAlignStyle = wb.createCellStyle();
 		rightAlignStyle.setAlignment(HorizontalAlignment.RIGHT);
+	}
+
+	private void InscrirePassagesISS(Sheet sheet, CreationHelper factory, int pictureIndex, int compteur, DayData day) {
+		Row rowISS = sheet.createRow(compteur);
+		Cell issHeader = rowISS.createCell(0);
+		issHeader.setCellValue("ISS Passover");
+		issHeader.setCellStyle(rightAlignStyle);
+
+		sheet.addMergedRegion(new CellRangeAddress(compteur, compteur, 0, 1));
+		
+		int cpt = 0;
+		for(IssDatas issDatas : day.getISSPassOver()) {
+			if (issDatas.hasDatas())
+			{
+				Cell cellIss = rowISS.createCell(2+cpt);
+				ClientAnchor anchor = factory.createClientAnchor();
+				anchor.setCol1(cellIss.getColumnIndex() + 1);
+				anchor.setCol2(cellIss.getColumnIndex() + 3);
+				anchor.setRow1(compteur + 1);
+				anchor.setRow2(compteur + 5);
+				Drawing drawing = sheet.createDrawingPatriarch();
+				Comment comment = drawing.createCellComment(anchor);
+				comment.setString(factory.createRichTextString(issDatas.getDatas()));
+				
+				cellIss.setCellComment(comment);
+				cellIss.setCellStyle(centeredStyle);
+				
+				if (pictureIndex != -1)
+				{
+					Drawing issDrawing = sheet.createDrawingPatriarch();
+					ClientAnchor issAnchor = factory.createClientAnchor();
+					issAnchor.setCol1(cellIss.getColumnIndex());
+					issAnchor.setCol2(cellIss.getColumnIndex());
+					issAnchor.setRow1(compteur);
+					issAnchor.setRow2(compteur+1);
+					Picture pict = issDrawing.createPicture( issAnchor, pictureIndex );
+					//pict.resize();
+				}
+				else
+				{
+					cellIss.setCellValue("X");
+				}
+			}
+			cpt++;
+		}
 	}
 
 	private void InscrireHighClouds(Sheet sheet, int compteur, DayData day) {

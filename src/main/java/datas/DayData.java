@@ -1,6 +1,5 @@
 package datas;
 
-import java.util.Date;
 import java.util.List;
 
 import utils.ColorsEnum;
@@ -17,6 +16,7 @@ public class DayData {
 	private List<Integer> _LowClouds;
 	private List<Integer> _TotalClouds;
 	private List<ColorsEnum> _QualiteCiel;
+	private List<IssDatas> _PassagesISS;
 	
 	public void setDate(String dateJour) {
 		_DateJour = dateJour;
@@ -56,6 +56,14 @@ public class DayData {
 
 	public void setSkyQuality(List<ColorsEnum> qualiteCiel) {
 		_QualiteCiel = qualiteCiel;
+	}
+	
+	public void setISSPassOver(List<IssDatas> passagesISS) {
+		_PassagesISS = passagesISS;
+	}
+
+	public List<IssDatas> getISSPassOver() {
+		return _PassagesISS;
 	}
 
 	public String getDate() {

@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
 import com.google.api.services.drive.Drive;
 
 import datas.DayData;
+import datas.IssDatas;
 import datas.LieuData;
 import input.GoogleDriveInput;
 import output.ExcelFile;
@@ -58,7 +59,7 @@ public class Launcher {
 	private static List<Coordinate> getCoordinatesFromConfigFile() throws IOException {
 		List<Coordinate> listeLieux = new ArrayList<Coordinate>();
 		
-		String configFileName = GoogleDriveInput.getConfigFile("Coordinates.txt");
+		String configFileName = GoogleDriveInput.getFile("Coordinates.txt");
 		
 		List<String> content = Files.readAllLines(Paths.get(configFileName));
 		Files.delete(Paths.get("Coordinates.txt"));
@@ -200,8 +201,26 @@ public class Launcher {
 		dayData.setTotalClouds(ScraperNuagesTotaux(fc_day));
 		//	- l'évaluation de qualité pour chaque heure
 		dayData.setSkyQuality(ScraperQualiteCiel(fc_day));
+		dayData.setISSPassOver(ScraperISS(fc_day));
 		
 		return dayData;
+	}
+	
+	private static List<IssDatas> ScraperISS(Element fc_day) {
+		List<IssDatas> listeIssDatas = new ArrayList<IssDatas>();
+		Element fc_detail_row = fc_day.select(".fc_detail_row").get(4);
+		for(Element hour : fc_detail_row.select("li"))
+		{
+			IssDatas datas = new IssDatas();
+			String content = hour.attr("data-content");
+			if (!content.trim().isEmpty())
+			{
+				datas.parse(content);
+			}
+			listeIssDatas.add(datas);
+		}
+		return listeIssDatas;
+		
 	}
 
 	private static List<ColorsEnum> ScraperQualiteCiel(Element fc_day) {
