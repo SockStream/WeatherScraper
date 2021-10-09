@@ -2,6 +2,8 @@ package datas;
 
 import java.util.List;
 
+import org.apache.poi.ss.formula.eval.NotImplementedException;
+
 import utils.ColorsEnum;
 
 public class DayData {
@@ -107,6 +109,16 @@ public class DayData {
 	public List<Integer> getLowClouds()
 	{
 		return _LowClouds;
+	}
+
+	public void setRelativeHumidity(List<HumidityData> scraperHumidity) {
+		// TODO Auto-generated method stub
+		throw new NotImplementedException("");
+	}
+
+	public void setDewPoint(List<ColorsEnum> scraperDewPoint) {
+		// TODO Auto-generated method stub
+		throw new NotImplementedException("");
 	}
 
 }

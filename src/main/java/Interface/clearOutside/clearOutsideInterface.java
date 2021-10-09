@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,6 +13,7 @@ import org.jsoup.select.Elements;
 import Interface.Coordinate;
 import Interface.InterfaceRecuperation;
 import datas.DayData;
+import datas.HumidityData;
 import datas.IssDatas;
 import datas.LieuData;
 import utils.ColorsEnum;
@@ -115,7 +117,7 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 	}
 
 	private static DayData ScraperDonneesJour(Element fc_day) {
-		//ici on va scraper les donnees du jour courant pour récupérer :
+		//ici on va scraper les donnees du jour courant pour rï¿½cupï¿½rer :
 		DayData dayData = new DayData();
 		//	- la date
 		dayData.setDate(ScraperDateJour(fc_day));
@@ -134,11 +136,34 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 		dayData.setLowClouds(ScraperNuagesBas(fc_day));
 		//	-les nuages totaux pour chaque heure
 		dayData.setTotalClouds(ScraperNuagesTotaux(fc_day));
-		//	- l'évaluation de qualité pour chaque heure
+		//	- l'ï¿½valuation de qualitï¿½ pour chaque heure
 		dayData.setSkyQuality(ScraperQualiteCiel(fc_day));
 		dayData.setISSPassOver(ScraperISS(fc_day));
+		dayData.setRelativeHumidity(ScraperHumidity(fc_day));
+		dayData.setDewPoint(ScraperDewPoint(fc_day));
 		
 		return dayData;
+	}
+	
+	public static List<HumidityData> ScraperHumidity(Element fc_day)
+	{
+		//TODO
+		throw new NotImplementedException("not implemented");
+	}
+	
+	private static List<ColorsEnum> ScraperDewPoint(Element fc_day)
+	{
+		List<ColorsEnum> listeDewPoint = new ArrayList<ColorsEnum>();
+		
+		Element fc_detail_row = fc_day.select(".fc_detail_row").get(14);
+		
+		for(Element rating : fc_detail_row.select("li"))
+		{
+			ColorsEnum color = Utils.ConvertRatingToColors(rating);
+			listeDewPoint.add(color);
+		}
+		
+		return listeDewPoint;
 	}
 	
 	private static List<IssDatas> ScraperISS(Element fc_day) {
