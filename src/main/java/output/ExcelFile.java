@@ -34,9 +34,11 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.util.IOUtils;
 
 import datas.DayData;
+import datas.HumidityData;
 import datas.IssDatas;
 import datas.LieuData;
 import input.GoogleDriveInput;
+import utils.ColorsEnum;
 
 public class ExcelFile {
 	private static String _Filename;
@@ -44,7 +46,11 @@ public class ExcelFile {
 	private CellStyle redStyle;
 	private CellStyle orangeStyle;
 	private CellStyle greenStyle;
+	private CellStyle lightGreenStyle;
+	private CellStyle lightOrangeStyle;
+	private CellStyle lightRedStyle;
 	private CellStyle boldStyle;
+	private CellStyle lightStyle;
 	private CellStyle centeredBoldStyle;
 	private CellStyle vCenteredBoldStyle;
 	private CellStyle rightAlignStyle;
@@ -96,6 +102,10 @@ public class ExcelFile {
 				InscrireHighClouds(sheet, compteur, day);
 				compteur++;
 				InscrirePassagesISS(sheet,factory,pictureIndex, compteur, day);
+				compteur++;
+				InscrireDewPoint(sheet,compteur,day);
+				compteur++;
+				InscrireHumidity(sheet,compteur,day);
 				
 				compteur += 2;
 			}
@@ -168,8 +178,31 @@ public class ExcelFile {
 		greenStyle.setAlignment(HorizontalAlignment.CENTER);
 		greenStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		
+		lightRedStyle = wb.createCellStyle();
+		lightRedStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+		lightRedStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		//lightRedStyle.setFont(boldFont);
+		lightRedStyle.setAlignment(HorizontalAlignment.CENTER);
+		lightRedStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		
+		lightOrangeStyle = wb.createCellStyle();
+		lightOrangeStyle.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
+		lightOrangeStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		//lightOrangeStyle.setFont(boldFont);
+		lightOrangeStyle.setAlignment(HorizontalAlignment.CENTER);
+		lightOrangeStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		
+		lightGreenStyle = wb.createCellStyle();
+		lightGreenStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+		lightGreenStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		//lightGreenStyle.setFont(boldFont);
+		lightGreenStyle.setAlignment(HorizontalAlignment.CENTER);
+		lightGreenStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		
 		boldStyle = wb.createCellStyle();
 		boldStyle.setFont(boldFont);
+		
+		lightStyle = wb.createCellStyle();
 		
 		centeredBoldStyle = wb.createCellStyle();
 		centeredBoldStyle.setFont(boldFont);
@@ -184,6 +217,70 @@ public class ExcelFile {
 		
 		rightAlignStyle = wb.createCellStyle();
 		rightAlignStyle.setAlignment(HorizontalAlignment.RIGHT);
+	}
+
+	private void InscrireHumidity(Sheet sheet, int compteur, DayData day) {
+		Row rowHumidity = sheet.createRow(compteur);
+		Cell humidityHeader = rowHumidity.createCell(0);
+
+		humidityHeader.setCellValue("Relative Humidity");
+		humidityHeader.setCellStyle(rightAlignStyle);
+		sheet.addMergedRegion(new CellRangeAddress(compteur, compteur, 0, 1));
+		
+		int cpt = 0;
+		for(HumidityData humidityData : day.getRelativeHumidity())
+		{
+			Cell humidityCell = rowHumidity.createCell(cpt+2);
+			humidityCell.setCellValue(humidityData.getValeur());
+			switch(humidityData.getCouleur())
+			{
+			case GREEN:
+				humidityCell.setCellStyle(lightGreenStyle);
+				break;
+			case ORANGE:
+				humidityCell.setCellStyle(lightOrangeStyle);
+				break;
+			case RED:
+				humidityCell.setCellStyle(lightRedStyle);
+				break;
+			case WHITE:
+			default:
+				humidityCell.setCellStyle(lightStyle);
+			
+			}
+			cpt ++;
+		}
+	}
+
+	private void InscrireDewPoint(Sheet sheet, int compteur, DayData day) {
+		Row rowDew = sheet.createRow(compteur);
+		Cell dewHeader = rowDew.createCell(0);
+
+		dewHeader.setCellValue("Dew Point");
+		dewHeader.setCellStyle(rightAlignStyle);
+		sheet.addMergedRegion(new CellRangeAddress(compteur, compteur, 0, 1));
+		
+		int cpt = 0;
+		for(ColorsEnum dewColor : day.getDewPoint()) {
+			Cell cellDew = rowDew.createCell(2+cpt);
+			switch(dewColor)
+			{
+			case GREEN:
+				cellDew.setCellStyle(lightGreenStyle);
+				break;
+			case ORANGE:
+				cellDew.setCellStyle(lightOrangeStyle);
+				break;
+			case RED:
+				cellDew.setCellStyle(lightRedStyle);
+				break;
+			case WHITE:
+			default:
+				cellDew.setCellStyle(lightStyle);
+			
+			}
+			cpt++;
+		}
 	}
 
 	private void InscrirePassagesISS(Sheet sheet, CreationHelper factory, int pictureIndex, int compteur, DayData day) {

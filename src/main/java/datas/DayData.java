@@ -19,6 +19,8 @@ public class DayData {
 	private List<Integer> _TotalClouds;
 	private List<ColorsEnum> _QualiteCiel;
 	private List<IssDatas> _PassagesISS;
+	private List<HumidityData> _RelativeHumidity;
+	private List<ColorsEnum> _DewPoint;
 	
 	public void setDate(String dateJour) {
 		_DateJour = dateJour;
@@ -111,14 +113,21 @@ public class DayData {
 		return _LowClouds;
 	}
 
-	public void setRelativeHumidity(List<HumidityData> scraperHumidity) {
-		// TODO Auto-generated method stub
-		throw new NotImplementedException("");
+	public void setRelativeHumidity(List<HumidityData> relativeHumidity) {
+		_RelativeHumidity = relativeHumidity;
+	}
+	
+	public List<HumidityData> getRelativeHumidity() {
+		return _RelativeHumidity;
 	}
 
-	public void setDewPoint(List<ColorsEnum> scraperDewPoint) {
-		// TODO Auto-generated method stub
-		throw new NotImplementedException("");
+	public void setDewPoint(List<ColorsEnum> dewPoint) {
+		_DewPoint = dewPoint;
+	}
+	
+	public List<ColorsEnum> getDewPoint()
+	{
+		return _DewPoint;
 	}
 
 }

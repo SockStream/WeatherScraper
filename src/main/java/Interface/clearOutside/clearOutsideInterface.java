@@ -147,8 +147,20 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 	
 	public static List<HumidityData> ScraperHumidity(Element fc_day)
 	{
-		//TODO
-		throw new NotImplementedException("not implemented");
+		List<HumidityData> listeHumidityData = new ArrayList<HumidityData>();
+		
+		Element fc_detail_row = fc_day.select(".fc_detail_row").get(15);
+		
+		for(Element rating : fc_detail_row.select("li"))
+		{
+			HumidityData humidityData = new HumidityData();
+			ColorsEnum color = Utils.ConvertRatingToColors(rating);
+			humidityData.setCouleur(color);
+			humidityData.setValeur(Double.parseDouble(rating.text()));
+			listeHumidityData.add(humidityData);
+		}
+		
+		return listeHumidityData;
 	}
 	
 	private static List<ColorsEnum> ScraperDewPoint(Element fc_day)
