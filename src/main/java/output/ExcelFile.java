@@ -13,8 +13,10 @@ import java.util.List;
 
 import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.common.usermodel.HyperlinkType;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -90,7 +92,11 @@ public class ExcelFile {
 			{
 
 				Row rowDate = sheet.createRow(compteur);
-				InscrireDate(rowDate, day,wrapStyle);
+				InscrireDate(rowDate, day);
+				compteur++;
+				InscrireDewPoint(sheet,compteur,day);
+				compteur++;
+				InscrireHumidity(sheet,compteur,day);
 				compteur ++;
 				
 				InscrireTotalClouds(sheet, compteur,day);
@@ -102,10 +108,6 @@ public class ExcelFile {
 				InscrireHighClouds(sheet, compteur, day);
 				compteur++;
 				InscrirePassagesISS(sheet,factory,pictureIndex, compteur, day);
-				compteur++;
-				InscrireDewPoint(sheet,compteur,day);
-				compteur++;
-				InscrireHumidity(sheet,compteur,day);
 				
 				compteur += 2;
 			}
@@ -150,12 +152,15 @@ public class ExcelFile {
 	}
 
 	private void CreerStyles(Workbook wb) {
-		wrapStyle = wb.createCellStyle();
-		wrapStyle.setWrapText(true);
-		
-
 		Font boldFont = wb.createFont();
 		boldFont.setBold(true);
+		
+		wrapStyle = wb.createCellStyle();
+		wrapStyle.setWrapText(true);
+		wrapStyle.setBorderBottom(BorderStyle.HAIR);
+		wrapStyle.setBorderTop(BorderStyle.HAIR);
+		wrapStyle.setBorderRight(BorderStyle.HAIR);
+		wrapStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		redStyle = wb.createCellStyle();
 		redStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
@@ -163,6 +168,10 @@ public class ExcelFile {
 		redStyle.setFont(boldFont);
 		redStyle.setAlignment(HorizontalAlignment.CENTER);
 		redStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		redStyle.setBorderBottom(BorderStyle.HAIR);
+		redStyle.setBorderTop(BorderStyle.HAIR);
+		redStyle.setBorderRight(BorderStyle.HAIR);
+		redStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		orangeStyle = wb.createCellStyle();
 		orangeStyle.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
@@ -170,6 +179,10 @@ public class ExcelFile {
 		orangeStyle.setFont(boldFont);
 		orangeStyle.setAlignment(HorizontalAlignment.CENTER);
 		orangeStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		orangeStyle.setBorderBottom(BorderStyle.HAIR);
+		orangeStyle.setBorderTop(BorderStyle.HAIR);
+		orangeStyle.setBorderRight(BorderStyle.HAIR);
+		orangeStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		greenStyle = wb.createCellStyle();
 		greenStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
@@ -177,6 +190,10 @@ public class ExcelFile {
 		greenStyle.setFont(boldFont);
 		greenStyle.setAlignment(HorizontalAlignment.CENTER);
 		greenStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		greenStyle.setBorderBottom(BorderStyle.HAIR);
+		greenStyle.setBorderTop(BorderStyle.HAIR);
+		greenStyle.setBorderRight(BorderStyle.HAIR);
+		greenStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		lightRedStyle = wb.createCellStyle();
 		lightRedStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
@@ -184,6 +201,10 @@ public class ExcelFile {
 		//lightRedStyle.setFont(boldFont);
 		lightRedStyle.setAlignment(HorizontalAlignment.CENTER);
 		lightRedStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		lightRedStyle.setBorderBottom(BorderStyle.HAIR);
+		lightRedStyle.setBorderTop(BorderStyle.HAIR);
+		lightRedStyle.setBorderRight(BorderStyle.HAIR);
+		lightRedStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		lightOrangeStyle = wb.createCellStyle();
 		lightOrangeStyle.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
@@ -191,6 +212,10 @@ public class ExcelFile {
 		//lightOrangeStyle.setFont(boldFont);
 		lightOrangeStyle.setAlignment(HorizontalAlignment.CENTER);
 		lightOrangeStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		lightOrangeStyle.setBorderBottom(BorderStyle.HAIR);
+		lightOrangeStyle.setBorderTop(BorderStyle.HAIR);
+		lightOrangeStyle.setBorderRight(BorderStyle.HAIR);
+		lightOrangeStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		lightGreenStyle = wb.createCellStyle();
 		lightGreenStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
@@ -198,25 +223,53 @@ public class ExcelFile {
 		//lightGreenStyle.setFont(boldFont);
 		lightGreenStyle.setAlignment(HorizontalAlignment.CENTER);
 		lightGreenStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		lightGreenStyle.setBorderBottom(BorderStyle.HAIR);
+		lightGreenStyle.setBorderTop(BorderStyle.HAIR);
+		lightGreenStyle.setBorderRight(BorderStyle.HAIR);
+		lightGreenStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		boldStyle = wb.createCellStyle();
 		boldStyle.setFont(boldFont);
+		boldStyle.setBorderBottom(BorderStyle.HAIR);
+		boldStyle.setBorderTop(BorderStyle.HAIR);
+		boldStyle.setBorderRight(BorderStyle.HAIR);
+		boldStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		lightStyle = wb.createCellStyle();
+		lightStyle.setBorderBottom(BorderStyle.HAIR);
+		lightStyle.setBorderTop(BorderStyle.HAIR);
+		lightStyle.setBorderRight(BorderStyle.HAIR);
+		lightStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		centeredBoldStyle = wb.createCellStyle();
 		centeredBoldStyle.setFont(boldFont);
 		centeredBoldStyle.setAlignment(HorizontalAlignment.CENTER);
+		centeredBoldStyle.setBorderBottom(BorderStyle.HAIR);
+		centeredBoldStyle.setBorderTop(BorderStyle.HAIR);
+		centeredBoldStyle.setBorderRight(BorderStyle.HAIR);
+		centeredBoldStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		vCenteredBoldStyle = wb.createCellStyle();
 		vCenteredBoldStyle.setFont(boldFont);
 		vCenteredBoldStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		vCenteredBoldStyle.setBorderBottom(BorderStyle.HAIR);
+		vCenteredBoldStyle.setBorderTop(BorderStyle.HAIR);
+		vCenteredBoldStyle.setBorderRight(BorderStyle.HAIR);
+		vCenteredBoldStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		centeredStyle = wb.createCellStyle();
 		centeredStyle.setAlignment(HorizontalAlignment.CENTER);
+		centeredStyle.setBorderBottom(BorderStyle.HAIR);
+		centeredStyle.setBorderTop(BorderStyle.HAIR);
+		centeredStyle.setBorderRight(BorderStyle.HAIR);
+		centeredStyle.setBorderLeft(BorderStyle.HAIR);
 		
 		rightAlignStyle = wb.createCellStyle();
 		rightAlignStyle.setAlignment(HorizontalAlignment.RIGHT);
+		rightAlignStyle.setBorderBottom(BorderStyle.HAIR);
+		rightAlignStyle.setBorderTop(BorderStyle.HAIR);
+		rightAlignStyle.setBorderRight(BorderStyle.HAIR);
+		rightAlignStyle.setBorderLeft(BorderStyle.HAIR);
 	}
 
 	private void InscrireHumidity(Sheet sheet, int compteur, DayData day) {
@@ -293,9 +346,9 @@ public class ExcelFile {
 		
 		int cpt = 0;
 		for(IssDatas issDatas : day.getISSPassOver()) {
+			Cell cellIss = rowISS.createCell(2+cpt);
 			if (issDatas.hasDatas())
 			{
-				Cell cellIss = rowISS.createCell(2+cpt);
 				ClientAnchor anchor = factory.createClientAnchor();
 				anchor.setCol1(cellIss.getColumnIndex() + 1);
 				anchor.setCol2(cellIss.getColumnIndex() + 3);
@@ -306,7 +359,6 @@ public class ExcelFile {
 				comment.setString(factory.createRichTextString(issDatas.getDatas()));
 				
 				cellIss.setCellComment(comment);
-				cellIss.setCellStyle(centeredStyle);
 				
 				if (pictureIndex != -1)
 				{
@@ -324,6 +376,7 @@ public class ExcelFile {
 					cellIss.setCellValue("X");
 				}
 			}
+			cellIss.setCellStyle(centeredStyle);
 			cpt++;
 		}
 	}
@@ -395,7 +448,7 @@ public class ExcelFile {
 		}
 	}
 
-	private void InscrireDate(Row rowDate, DayData day, CellStyle wrapStyle) {
+	private void InscrireDate(Row rowDate, DayData day) {
 		Cell cellDate = rowDate.createCell(0);
 		cellDate.setCellValue(day.getDate());
 		cellDate.setCellStyle(vCenteredBoldStyle);
@@ -442,6 +495,7 @@ public class ExcelFile {
 		cellMagnitude.setCellStyle(boldStyle);
 		Cell cellMagnitudeValue = rowMagnitude.createCell(1);
 		cellMagnitudeValue.setCellValue(data.getMagnitude());
+		cellMagnitudeValue.setCellStyle(rightAlignStyle);
 	}
 
 	private void InscrireBortle(Sheet sheet, LieuData data) {
@@ -451,6 +505,7 @@ public class ExcelFile {
 		cellBortle.setCellStyle(boldStyle);
 		Cell cellBortleValue = rowBortle.createCell(1);
 		cellBortleValue.setCellValue(data.getBortle());
+		cellBortleValue.setCellStyle(rightAlignStyle);
 	}
 
 	private void InscrireNomLieu(Sheet sheet, LieuData data) {
