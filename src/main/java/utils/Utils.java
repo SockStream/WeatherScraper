@@ -23,5 +23,12 @@ public class Utils {
 		
 		return ColorsEnum.WHITE;
 	}
+	
+	public static Double ConvertMphToKmh(double mph)
+	{
+		double kmh = mph * 1.60934;
+		double roundOff = Math.round(kmh * 100.0) / 100.0;
+		return roundOff;
+	}
 
 }

@@ -13,7 +13,7 @@ import org.jsoup.select.Elements;
 import Interface.Coordinate;
 import Interface.InterfaceRecuperation;
 import datas.DayData;
-import datas.HumidityData;
+import datas.DoubleColorData;
 import datas.IssDatas;
 import datas.LieuData;
 import utils.ColorsEnum;
@@ -141,19 +141,19 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 		dayData.setISSPassOver(ScraperISS(fc_day));
 		dayData.setRelativeHumidity(ScraperHumidity(fc_day));
 		dayData.setDewPoint(ScraperDewPoint(fc_day));
-		
+		dayData.setWindSpeed(ScrapperWindSpeed(fc_day));
 		return dayData;
 	}
 	
-	public static List<HumidityData> ScraperHumidity(Element fc_day)
+	public static List<DoubleColorData> ScraperHumidity(Element fc_day)
 	{
-		List<HumidityData> listeHumidityData = new ArrayList<HumidityData>();
+		List<DoubleColorData> listeHumidityData = new ArrayList<DoubleColorData>();
 		
 		Element fc_detail_row = fc_day.select(".fc_detail_row").get(15);
 		
 		for(Element rating : fc_detail_row.select("li"))
 		{
-			HumidityData humidityData = new HumidityData();
+			DoubleColorData humidityData = new DoubleColorData();
 			ColorsEnum color = Utils.ConvertRatingToColors(rating);
 			humidityData.setCouleur(color);
 			humidityData.setValeur(Double.parseDouble(rating.text()));
@@ -176,6 +176,22 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 		}
 		
 		return listeDewPoint;
+	}
+	
+	private static List<DoubleColorData> ScrapperWindSpeed(Element fc_day)
+	{
+		List<DoubleColorData> listeWindSpeed = new ArrayList<DoubleColorData>();
+		Element fc_detail_row = fc_day.select(".fc_detail_row").get(10);
+		for(Element rating : fc_detail_row.select("li"))
+		{
+			DoubleColorData windData = new DoubleColorData();
+			ColorsEnum color = Utils.ConvertRatingToColors(rating);
+			windData.setCouleur(color);
+			windData.setValeur(Double.parseDouble(rating.text()));
+			listeWindSpeed.add(windData);
+		}
+		return listeWindSpeed;
+		
 	}
 	
 	private static List<IssDatas> ScraperISS(Element fc_day) {

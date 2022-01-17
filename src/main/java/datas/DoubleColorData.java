@@ -2,7 +2,7 @@ package datas;
 
 import utils.ColorsEnum;
 
-public class HumidityData {
+public class DoubleColorData {
 	private ColorsEnum couleur;
 	private Double valeur;
 	public ColorsEnum getCouleur() {

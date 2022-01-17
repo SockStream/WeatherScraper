@@ -36,11 +36,12 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.util.IOUtils;
 
 import datas.DayData;
-import datas.HumidityData;
+import datas.DoubleColorData;
 import datas.IssDatas;
 import datas.LieuData;
 import input.GoogleDriveInput;
 import utils.ColorsEnum;
+import utils.Utils;
 
 public class ExcelFile {
 	private static String _Filename;
@@ -106,6 +107,8 @@ public class ExcelFile {
 				InscrireMediumClouds(sheet, compteur, day);
 				compteur ++;
 				InscrireHighClouds(sheet, compteur, day);
+				compteur++;
+				InscrireVent(sheet,compteur,day);
 				compteur++;
 				InscrirePassagesISS(sheet,factory,pictureIndex, compteur, day);
 				
@@ -281,7 +284,7 @@ public class ExcelFile {
 		sheet.addMergedRegion(new CellRangeAddress(compteur, compteur, 0, 1));
 		
 		int cpt = 0;
-		for(HumidityData humidityData : day.getRelativeHumidity())
+		for(DoubleColorData humidityData : day.getRelativeHumidity())
 		{
 			Cell humidityCell = rowHumidity.createCell(cpt+2);
 			humidityCell.setCellValue(humidityData.getValeur());
@@ -299,6 +302,39 @@ public class ExcelFile {
 			case WHITE:
 			default:
 				humidityCell.setCellStyle(lightStyle);
+			
+			}
+			cpt ++;
+		}
+	}
+	
+	private void InscrireVent(Sheet sheet, int compteur, DayData day) {
+		Row rowWind = sheet.createRow(compteur);
+		Cell windHeader = rowWind.createCell(0);
+
+		windHeader.setCellValue("Wind Speed (Km/h)");
+		windHeader.setCellStyle(rightAlignStyle);
+		sheet.addMergedRegion(new CellRangeAddress(compteur, compteur, 0, 1));
+		
+		int cpt = 0;
+		for(DoubleColorData windData : day.getWindSpeed())
+		{
+			Cell windCell = rowWind.createCell(cpt+2);
+			windCell.setCellValue(Utils.ConvertMphToKmh(windData.getValeur()));
+			switch(windData.getCouleur())
+			{
+			case GREEN:
+				windCell.setCellStyle(lightGreenStyle);
+				break;
+			case ORANGE:
+				windCell.setCellStyle(lightOrangeStyle);
+				break;
+			case RED:
+				windCell.setCellStyle(lightRedStyle);
+				break;
+			case WHITE:
+			default:
+				windCell.setCellStyle(lightStyle);
 			
 			}
 			cpt ++;
