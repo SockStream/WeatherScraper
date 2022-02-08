@@ -7,18 +7,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
+import GoogleDriveUtils.GoogleMailManager;
 import Interface.Coordinate;
 import Interface.InterfaceRecuperation;
 import Interface.clearOutside.clearOutsideInterface;
 import input.GoogleDriveInput;
 import output.ExcelFile;
 import output.GoogleDrivePusher;
+import output.MailSender;
 import utils.CustomComparator;
 
 public class Launcher {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, MessagingException {
 		
+		GoogleMailManager.getGMailService();
 		List<Coordinate> listeLieux = getCoordinatesFromConfigFile();
 		InterfaceRecuperation interfaceRecuperation = new clearOutsideInterface();
 			

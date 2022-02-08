@@ -99,6 +99,8 @@ public class ExcelFile {
 				compteur++;
 				InscrireHumidity(sheet,compteur,day);
 				compteur ++;
+				InscrireVent(sheet,compteur,day);
+				compteur++;
 				
 				InscrireTotalClouds(sheet, compteur,day);
 				compteur ++;
@@ -107,8 +109,6 @@ public class ExcelFile {
 				InscrireMediumClouds(sheet, compteur, day);
 				compteur ++;
 				InscrireHighClouds(sheet, compteur, day);
-				compteur++;
-				InscrireVent(sheet,compteur,day);
 				compteur++;
 				InscrirePassagesISS(sheet,factory,pictureIndex, compteur, day);
 				
