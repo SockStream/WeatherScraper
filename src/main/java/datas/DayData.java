@@ -22,6 +22,8 @@ public class DayData {
 	private List<DoubleColorData> _RelativeHumidity;
 	private List<ColorsEnum> _DewPoint;
 	private List<DoubleColorData> _WindSpeed;
+	private int _AstroDarkBeginHour;
+	private int _AstroDarkEndHour;
 	
 	public void setDate(String dateJour) {
 		_DateJour = dateJour;
@@ -139,6 +141,24 @@ public class DayData {
 	public List<DoubleColorData> getWindSpeed()
 	{
 		return _WindSpeed;
+	}
+
+	public void setAstroDarkBeginHour(int astroDarkBeginHour) {
+		_AstroDarkBeginHour = astroDarkBeginHour;
+	}
+	
+	public int getAstroDarkBeginHour()
+	{
+		return _AstroDarkBeginHour;
+	}
+
+	public void setAstroDarkEndHour(int astroDarkEndHour) {
+		_AstroDarkEndHour = astroDarkEndHour;
+	}
+	
+	public int getAstroDarkEndHour()
+	{
+		return _AstroDarkEndHour;
 	}
 
 }

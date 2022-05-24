@@ -2,6 +2,7 @@ package Interface.clearOutside;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.ss.formula.eval.NotImplementedException;
@@ -17,7 +18,7 @@ import datas.DoubleColorData;
 import datas.IssDatas;
 import datas.LieuData;
 import utils.ColorsEnum;
-import utils.Utils;
+import utils.CustomUtils;
 
 public class clearOutsideInterface extends InterfaceRecuperation {
 
@@ -128,6 +129,8 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 		//	- les heures de lever et coucher
 		dayData.setMoonRise(ScraperLeverLuneJour(fc_day));
 		dayData.setMoonSet(ScraperCoucherLuneJour(fc_day));
+		dayData.setAstroDarkBeginHour(ScraperDebutAstroDarkJour(fc_day));
+		dayData.setAstroDarkEndHour(ScraperFinAstroDarkJour(fc_day));
 		//	- les nuages hauts pour chaque heure
 		dayData.setHighClouds(ScraperNuagesHauts(fc_day));
 		//	- les nuages moyens pour chaque heure
@@ -154,7 +157,7 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 		for(Element rating : fc_detail_row.select("li"))
 		{
 			DoubleColorData humidityData = new DoubleColorData();
-			ColorsEnum color = Utils.ConvertRatingToColors(rating);
+			ColorsEnum color = CustomUtils.ConvertRatingToColors(rating);
 			humidityData.setCouleur(color);
 			humidityData.setValeur(Double.parseDouble(rating.text()));
 			listeHumidityData.add(humidityData);
@@ -171,7 +174,7 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 		
 		for(Element rating : fc_detail_row.select("li"))
 		{
-			ColorsEnum color = Utils.ConvertRatingToColors(rating);
+			ColorsEnum color = CustomUtils.ConvertRatingToColors(rating);
 			listeDewPoint.add(color);
 		}
 		
@@ -185,7 +188,7 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 		for(Element rating : fc_detail_row.select("li"))
 		{
 			DoubleColorData windData = new DoubleColorData();
-			ColorsEnum color = Utils.ConvertRatingToColors(rating);
+			ColorsEnum color = CustomUtils.ConvertRatingToColors(rating);
 			windData.setCouleur(color);
 			windData.setValeur(Double.parseDouble(rating.text()));
 			listeWindSpeed.add(windData);
@@ -217,7 +220,7 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 		Element fc_hour_ratings = fc_day.selectFirst(".fc_hours.fc_hour_ratings");
 		for(Element rating : fc_hour_ratings.select("li"))
 		{
-			ColorsEnum color = Utils.ConvertRatingToColors(rating);
+			ColorsEnum color = CustomUtils.ConvertRatingToColors(rating);
 			listeQualiteCiel.add(color);
 		}
 		
@@ -307,6 +310,56 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 		date = fc_day_date.text();
 		
 		return date;
+	}
+	
+	private static int ScraperDebutAstroDarkJour(Element fc_day)
+	{
+		int heure = -1;
+		Element fc_day_astro_dark = fc_day.selectFirst(".fc_daylight");
+		String data_content = fc_day_astro_dark.attr("data-content");
+		String astro_dark_content = data_content.split("Astro Dark:</strong>")[1];
+		String content_begin = astro_dark_content.split("-")[0];
+		int content_begin_hour = -1;
+		try
+		{
+			content_begin_hour = Integer.parseInt(content_begin.split(":")[0].replaceAll(" ",""));
+		}
+		catch (Exception e)
+		{
+		}
+		int content_begin_minute = -1;
+		try
+		{
+			content_begin_minute = Integer.parseInt(content_begin.split(":")[1].replaceAll(" ",""));
+		}
+		catch (Exception e)
+		{
+		}
+		if (content_begin_minute > 0)
+		{
+			content_begin_hour += 1;
+		}
+		heure = content_begin_hour;
+		return heure;
+	}
+	
+	private static int ScraperFinAstroDarkJour(Element fc_day)
+	{
+		int heure = -1;
+		Element fc_day_astro_dark = fc_day.selectFirst(".fc_daylight");
+		String data_content = fc_day_astro_dark.attr("data-content");
+		String astro_dark_content = data_content.split("Astro Dark:</strong>")[1];
+		String content_end = astro_dark_content.split("-")[1];
+		int content_end_hour = -1;
+		try
+		{
+			content_end_hour = Integer.parseInt(content_end.split(":")[0].replaceAll(" ",""));
+		}
+		catch (NumberFormatException e)
+		{
+		}
+		heure = content_end_hour;
+		return heure;
 	}
 
 }

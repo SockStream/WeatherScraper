@@ -41,7 +41,7 @@ import datas.IssDatas;
 import datas.LieuData;
 import input.GoogleDriveInput;
 import utils.ColorsEnum;
-import utils.Utils;
+import utils.CustomUtils;
 
 public class ExcelFile {
 	private static String _Filename;
@@ -111,7 +111,8 @@ public class ExcelFile {
 				InscrireHighClouds(sheet, compteur, day);
 				compteur++;
 				InscrirePassagesISS(sheet,factory,pictureIndex, compteur, day);
-				
+				sheet.groupRow(rowDate.getRowNum() + 1, compteur);
+				sheet.setRowGroupCollapsed(rowDate.getRowNum() + 1, true);
 				compteur += 2;
 			}
 			
@@ -320,7 +321,7 @@ public class ExcelFile {
 		for(DoubleColorData windData : day.getWindSpeed())
 		{
 			Cell windCell = rowWind.createCell(cpt+2);
-			windCell.setCellValue(Utils.ConvertMphToKmh(windData.getValeur()));
+			windCell.setCellValue(CustomUtils.ConvertMphToKmh(windData.getValeur()));
 			switch(windData.getCouleur())
 			{
 			case GREEN:

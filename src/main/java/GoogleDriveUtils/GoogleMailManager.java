@@ -32,8 +32,8 @@ public class GoogleMailManager  extends GoogleManager{
 		Credential credential = GoogleManager.getCredentials();
 		
 		_mailService = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
-		MimeMessage message = createEmail("clement.beze@gmail.com", "clement.beze@gmail.com", "Titre", "Sujet");
-		_mailService.users().messages().send("clement.beze@gmail.com", createMessageWithEmail(message)).execute();
+		//MimeMessage message = createEmail("clement.beze@gmail.com", "clement.beze@gmail.com", "Titre", "Sujet");
+		//_mailService.users().messages().send("clement.beze@gmail.com", createMessageWithEmail(message)).execute();
 		return _mailService;
 	}
 	

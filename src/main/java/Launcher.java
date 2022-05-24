@@ -18,6 +18,7 @@ import output.ExcelFile;
 import output.GoogleDrivePusher;
 import output.MailSender;
 import utils.CustomComparator;
+import utils.CustomUtils;
 
 public class Launcher {
 
@@ -44,6 +45,9 @@ public class Launcher {
 		
 		ExcelFile excelFile = new ExcelFile("Previsions_clearoutside");
 		excelFile.Generate(interfaceRecuperation.getListeLieuxData());
+		
+		//CustomUtils.identifierOpportunites(interfaceRecuperation.getListeLieuxData());
+		
 		//GoogleDrivePusher.push("Previsions_clearoutside");
 		FileInputStream fis = new FileInputStream("Previsions_clearoutside.xls");
 		GoogleDrivePusher.createGoogleFile("Previsions_ClearOutside", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Previsions_clearoutside.xls",fis);
