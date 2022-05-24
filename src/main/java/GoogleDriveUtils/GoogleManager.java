@@ -47,7 +47,7 @@ public class GoogleManager {
             HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             DATA_STORE_FACTORY = new FileDataStoreFactory(CREDENTIALS_FOLDER);
         } catch (Throwable t) {
-            t.printStackTrace();
+            //t.printStackTrace();
             System.exit(1);
         }
     }

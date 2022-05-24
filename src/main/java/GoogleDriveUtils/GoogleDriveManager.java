@@ -26,12 +26,14 @@ public class GoogleDriveManager extends GoogleManager{
 		String query =  "name = '" + customFileName + "' ";
 		Drive driveService = GoogleDriveManager.getDriveService();
 		FileList result = driveService.files().list().setQ(query).execute();
+		String fileId = null;
 		for (File file : result.getFiles())
 		{
 			//System.out.println(file.getName()  + " " + file.getId() + " " + file.getParents());
-			return file.getId();
+			fileId = file.getId();
+			break;
 		}
-		return null;
+		return fileId;
 	}
  
 }
