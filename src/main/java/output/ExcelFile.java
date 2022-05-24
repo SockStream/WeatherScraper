@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.common.usermodel.HyperlinkType;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -44,7 +42,7 @@ import utils.ColorsEnum;
 import utils.CustomUtils;
 
 public class ExcelFile {
-	private static String _Filename;
+	private static String _filename;
 	private CellStyle wrapStyle;
 	private CellStyle redStyle;
 	private CellStyle orangeStyle;
@@ -61,7 +59,7 @@ public class ExcelFile {
 	
 	
 	public ExcelFile(String filename) {
-		_Filename = filename;
+		_filename = filename;
 	}
 
 	public void Generate(List<LieuData> listeLieuxData) throws FileNotFoundException, IOException {
@@ -556,7 +554,7 @@ public class ExcelFile {
 	private void FermerWorkBook(Workbook wb) throws FileNotFoundException, IOException {
 		// Write the output to a file
 	    try {
-	    	OutputStream fileOut = new FileOutputStream(_Filename + ".xls");
+	    	OutputStream fileOut = new FileOutputStream(_filename + ".xls");
 	        wb.write(fileOut);
 	    }
 	    catch(Exception e)
