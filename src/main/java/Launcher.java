@@ -22,7 +22,7 @@ import utils.CustomUtils;
 
 public class Launcher {
 
-	public static void main(String[] args) throws IOException, MessagingException {
+	public static void main(String[] args) throws IOException, MessagingException, InterruptedException {
 		
 		GoogleMailManager.getGMailService();
 		List<Coordinate> listeLieux = getCoordinatesFromConfigFile();
@@ -34,6 +34,7 @@ public class Launcher {
 			try
 			{
 				interfaceRecuperation.ScraperDonneesLieu(lieu);
+				Thread.sleep(20000);
 			}
 			catch(IOException e)
 			{
