@@ -24,6 +24,7 @@ public class DayData {
 	private List<DoubleColorData> _WindSpeed;
 	private int _AstroDarkBeginHour;
 	private int _AstroDarkEndHour;
+	private List<Integer> _ListeHeures;
 	
 	public void setDate(String dateJour) {
 		_DateJour = dateJour;
@@ -67,6 +68,10 @@ public class DayData {
 	
 	public void setISSPassOver(List<IssDatas> passagesISS) {
 		_PassagesISS = passagesISS;
+	}
+	
+	public void setHeures(List<Integer> listeHeures) {
+		_ListeHeures = listeHeures;
 	}
 
 	public List<IssDatas> getISSPassOver() {
@@ -159,6 +164,10 @@ public class DayData {
 	public int getAstroDarkEndHour()
 	{
 		return _AstroDarkEndHour;
+	}
+	
+	public List<Integer> getHeures() {
+		return _ListeHeures;
 	}
 
 }

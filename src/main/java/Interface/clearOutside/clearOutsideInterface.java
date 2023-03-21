@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.jsoup.Jsoup;
@@ -122,6 +124,7 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 		DayData dayData = new DayData();
 		//	- la date
 		dayData.setDate(ScraperDateJour(fc_day));
+		dayData.setHeures(ScraperHeures(fc_day));
 		//	- la phase de la lune
 		dayData.setMoonPhase(ScraperLuneJour(fc_day));
 		// -le remplissage de la lune
@@ -241,6 +244,32 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 
 	private static List<Integer> ScraperNuagesHauts(Element fc_day) {
 		return ScraperNuages(fc_day,3);
+	}
+	
+	private static List<Integer> ScraperHeures(Element fc_day) {
+		List<Integer> heures = new ArrayList<Integer>();
+		Element fc_hour_rating = fc_day.selectFirst(".fc_hour_ratings");
+		for(Element hour : fc_hour_rating.select("li"))
+		{
+			int valeur = -1;
+			Pattern pattern = Pattern.compile("(\\d+) [A-Za-z]+");
+			Matcher matcher = pattern.matcher(hour.text());
+			if (matcher.find()) {
+				try
+				{
+					valeur = Integer.parseInt(matcher.group(1));
+				}
+				catch(Exception e)
+				{
+					
+				}
+            } else {
+                
+            }
+			heures.add(valeur);
+		}
+		
+		return heures;
 	}
 	
 	private static List<Integer> ScraperNuages(Element fc_day, int index)

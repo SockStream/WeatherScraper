@@ -491,14 +491,14 @@ public class ExcelFile {
 		cellLune.setCellValue(day.getMoonPhase() + "\n" + day.getMoonPercent() + "%" + "\n" + day.getMoonRise() + "  " + day.getMoonSet());
 		cellLune.setCellStyle(vCenteredBoldStyle);
 		cellLune.setCellStyle(wrapStyle);
-		for (int i = 0; i <= 23; i++)
+		int index = 0;
+		for (int heure : day.getHeures())
 		{
-			Cell hourCell = rowDate.createCell(i+2);
-			int heure = i;
+			Cell hourCell = rowDate.createCell(index+2);
 			hourCell.setCellValue(String.format("%02d",heure));
-			if (day.getSkyQuality().size() == 24)
-			{
-				switch(day.getSkyQuality().get(i))
+			/*if (day.getSkyQuality().size() == 24)
+			{*/
+				switch(day.getSkyQuality().get(index))
 				{
 				case GREEN:
 					hourCell.setCellStyle(greenStyle);
@@ -514,11 +514,12 @@ public class ExcelFile {
 					hourCell.setCellStyle(boldStyle);
 				
 				}
-			}
+			/*}
 			else
-			{
-				hourCell.setCellStyle(boldStyle);
-			}
+			{*/
+			//	hourCell.setCellStyle(boldStyle);
+			//}
+				index+=1;
 		}
 		rowDate.setHeight((short) 800);
 	}
