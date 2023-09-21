@@ -30,7 +30,7 @@ public class Launcher {
 			
 		for (Coordinate lieu : listeLieux)
 		{
-			System.out.println("Traitement du lieu : " + lieu.getLatitude() + "/" + lieu.getLongitude());
+			System.out.println("Traitement du lieu : " + lieu.get_nom() + " (" + lieu.getLatitude() + "/" + lieu.getLongitude()+ ")");
 			try
 			{
 				interfaceRecuperation.ScraperDonneesLieu(lieu);
@@ -38,7 +38,7 @@ public class Launcher {
 			}
 			catch(IOException e)
 			{
-				System.err.println("Erreur en traitant le lieu : " + lieu.getLatitude() + "/" + lieu.getLongitude());
+				System.err.println("Erreur en traitant le lieu : " + lieu.get_nom() + " (" + lieu.getLatitude() + "/" + lieu.getLongitude()+ ")");
 			}
 		}
 		//on va trier les lieu par Bortle
@@ -77,7 +77,8 @@ public class Launcher {
 				String coord = line.split(" ")[0];
 				double latitude = Double.parseDouble(coord.split(",")[0]);
 				double longitude = Double.parseDouble(coord.split(",")[1]);
-				listeLieux.add(new Coordinate(latitude,longitude));
+				String nom = line.split(" ")[1].replaceAll("//", "");
+				listeLieux.add(new Coordinate(latitude,longitude,nom));
 			}
 			catch(Exception e)
 			{

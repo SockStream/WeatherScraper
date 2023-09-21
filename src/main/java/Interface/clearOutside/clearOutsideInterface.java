@@ -29,7 +29,7 @@ public class clearOutsideInterface extends InterfaceRecuperation {
 		Document doc = Jsoup.connect("http://clearoutside.com/forecast/" + coord.getLatitude() + "/" + coord.getLongitude() + "?view=midnight").get();
 		//System.out.println(doc.title());
 		LieuData lieu = new LieuData();
-		lieu.SetNom(ScraperNomLieu(doc));
+		lieu.SetNom(coord.get_nom());
 		lieu.setSkyQualityColor(ScraperCouleurQualiteCiel(doc));
 		lieu.setSkyMagnitude(ScraperMagnitudeCiel(doc));
 		lieu.setBortle(ScraperBortle(doc));
